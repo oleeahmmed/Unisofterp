@@ -1,0 +1,27 @@
+<header class="bg-white dark:bg-gray-800 shadow-sm z-20">
+    <div class="flex items-center justify-between p-4">
+        <button id="openSidebar" class="lg:hidden p-2 rounded-md hover:bg-blue-50 dark:hover:bg-blue-900 transition-colors">
+            <span class="material-icons text-blue-600 dark:text-blue-400">menu</span>
+        </button>
+        <!-- Search Bar -->
+        <div class="flex-1 px-4">
+            <div class="relative max-w-md">
+                <input type="text" 
+                       class="w-full pl-10 pr-4 py-2 rounded-lg border border-blue-200 dark:border-blue-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:bg-gray-700 dark:text-white transition-all" 
+                       placeholder="Search...">
+                <span class="material-icons absolute left-3 top-3 text-blue-400">search</span>
+            </div>
+        </div>
+        <!-- Right Side Icons -->
+        <div class="flex items-center space-x-4">
+            <button class="p-2 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900 relative transition-colors">
+                <span class="material-icons text-blue-600 dark:text-blue-400">notifications</span>
+                <span class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full"></span>
+            </button>
+
+            <button id="darkModeToggle" class="p-2 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900 transition-colors">
+                <span class="material-icons text-blue-600 dark:text-blue-400">dark_mode</span>
+            </button>
+        </div>
+    </div>
+</header>

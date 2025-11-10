@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<div class="p-6">
+  <h1>Dashboard Test</h1>
+  <p>Username: {{ user.username }}</p>
+  <p>Total Users: {{ total_users }}</p>
+  <p>Total Customers: {{ total_customers }}</p>
+  <p>Total Vendors: {{ total_vendors }}</p>
+  <p>Total Sales Orders: {{ total_sales_orders }}</p>
+  <p>Total Products: {{ total_products }}</p>
+  
+  <h2>Debug Info:</h2>
+  <pre>
+Context keys: {{ context.keys }}
+User: {{ user }}
+  </pre>
+</div>
+{% endblock %}

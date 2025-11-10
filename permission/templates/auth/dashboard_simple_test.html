@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main_content %}
+<div class="p-8">
+  <h1 class="text-3xl font-bold mb-4">Dashboard Test</h1>
+  
+  <div class="bg-white p-6 rounded-lg shadow mb-4">
+    <h2 class="text-xl font-bold mb-2">Template Variables Test:</h2>
+    <p>Total Users: {{ total_users|default:"0" }}</p>
+    <p>Total Customers: {{ total_customers|default:"0" }}</p>
+    <p>Total Vendors: {{ total_vendors|default:"0" }}</p>
+    <p>Total Products: {{ total_products|default:"0" }}</p>
+    <p>Total Sales Orders: {{ total_sales_orders|default:"0" }}</p>
+  </div>
+
+  <div class="bg-yellow-100 p-6 rounded-lg">
+    <h2 class="text-xl font-bold mb-2">If you see template tags like {{ }} below, Django is NOT processing this file:</h2>
+    <p>Raw test: {{ "This should show as text, not as template tag" }}</p>
+  </div>
+</div>
+{% endblock %}

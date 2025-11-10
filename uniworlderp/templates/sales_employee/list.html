@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main_content %}
+{% include "message.html" %}
+
+<!-- Main Container -->
+<div class="space-y-6">
+    <!-- Header Card -->
+    <div class="bg-[hsl(var(--card))] rounded-lg shadow-md border border-[hsl(var(--border))] overflow-hidden">
+        <!-- Card Header -->
+        <div class="bg-primary-gradient border-b border-[hsl(var(--border))] px-6 py-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-white">
+                        <i class="ri-user-follow-line mr-2"></i>Sales Employees
+                    </h1>
+                    <p class="text-sm text-white/80 mt-1">Manage your sales team members</p>
+                </div>
+                <a href="{% url 'customer_vendor:sales_employee_create' %}"
+                    class="inline-flex items-center px-6 py-3 bg-white text-[hsl(var(--primary))] rounded-lg hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 font-medium shadow-lg transition-all">
+                    <i class="ri-add-line mr-2"></i>
+                    Add New Employee
+                </a>
+            </div>
+        </div>
+
+        <!-- Search & Filter Section -->
+        <div class="bg-[hsl(var(--background))] px-6 py-4 border-b border-[hsl(var(--border))]">
+            <form method="get" action="{% url 'customer_vendor:sales_employee_list' %}"
+                class="flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="ri-search-line text-[hsl(var(--muted-foreground))]"></i>
+                    </div>
+                    <input type="text" name="search" placeholder="Search by name, phone, city..."
+                        class="pl-10 pr-4 py-2.5 w-full border border-[hsl(var(--border))] rounded-lg focus:ring-2 focus:ring-[hsl(var(--ring))] focus:border-[hsl(var(--primary))] bg-[hsl(var(--input))] text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))] transition-all"
+                        value="{{ request.GET.search }}">
+                </div>
+                <button type="submit"
+                    class="px-6 py-2.5 bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[hsl(var(--ring))] font-medium shadow-sm transition-all">
+                    <i class="ri-search-line mr-2"></i>Search
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="bg-[hsl(var(--card))] rounded-lg shadow-md border border-[hsl(var(--border))] overflow-hidden">
+        <!-- Card Header -->
+        <div class="bg-primary-gradient px-6 py-4 border-b border-[hsl(var(--border))]">
+            <h2 class="text-xl font-semibold text-white">
+                <i class="ri-team-line mr-2"></i>Employee Directory
+            </h2>
+        </div>
+
+        <!-- Table Container -->
+        <div class="overflow-x-auto bg-[hsl(var(--background))]">
+            <table id="salesEmployeeTable" class="w-full">
+                <thead class="bg-[hsl(var(--table-header-bg))] text-[hsl(var(--table-header-text))]">
+                    <tr>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">
+                            <input type="checkbox"
+                                class="rounded border-[hsl(var(--border))] text-[hsl(var(--primary))] focus:ring-[hsl(var(--ring))] focus:ring-2">
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer hover:text-[hsl(var(--primary-foreground))]">
+                            Full Name
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer hover:text-[hsl(var(--primary-foreground))]">
+                            Phone Number
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider hidden lg:table-cell">
+                            Location
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider hidden xl:table-cell">
+                            Date Joined
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider hidden xl:table-cell">
+                            Sales Target
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider hidden xl:table-cell">
+                            Sales Achieved
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider hidden md:table-cell">
+                            Profile
+                        </th>
+                        <th scope="col" class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-[hsl(var(--background))] divide-y divide-[hsl(var(--border))]">
+                    {% for sales_employee in sales_employees %}
+                    <tr class="hover:bg-[hsl(var(--table-row-hover))] transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <input type="checkbox"
+                                class="rounded border-[hsl(var(--border))] text-[hsl(var(--primary))] focus:ring-[hsl(var(--ring))] focus:ring-2">
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10">
+                                    {% if sales_employee.profile_picture %}
+                                    <img class="h-10 w-10 rounded-full object-cover border-2 border-[hsl(var(--border))]"
+                                        src="{{ sales_employee.profile_picture.url }}"
+                                        alt="{{ sales_employee.full_name }}">
+                                    {% else %}
+                                    <div
+                                        class="h-10 w-10 rounded-full bg-[hsl(var(--primary))] flex items-center justify-center text-[hsl(var(--primary-foreground))] font-semibold">
+                                        {{ sales_employee.full_name|slice:":1"|upper }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-[hsl(var(--foreground))]">
+                                        {{ sales_employee.full_name }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-[hsl(var(--foreground))]">
+                                <i class="ri-phone-line mr-1 text-[hsl(var(--muted-foreground))]"></i>
+                                {{ sales_employee.phone_number }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
+                            <div class="text-sm text-[hsl(var(--foreground))]">
+                                <i class="ri-map-pin-line mr-1 text-[hsl(var(--muted-foreground))]"></i>
+                                {{ sales_employee.city|default:"N/A" }}, {{ sales_employee.state|default:"N/A" }}
+                            </div>
+                            <div class="text-xs text-[hsl(var(--muted-foreground))]">
+                                {{ sales_employee.country|default:"N/A" }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap hidden xl:table-cell">
+                            <div class="text-sm text-[hsl(var(--foreground))]">
+                                <i class="ri-calendar-line mr-1 text-[hsl(var(--muted-foreground))]"></i>
+                                {{ sales_employee.date_of_joining|date:"M d, Y" }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap hidden xl:table-cell">
+                            <div class="text-sm font-medium text-[hsl(var(--foreground))]">
+                                ${{ sales_employee.sales_target|floatformat:0|default:"0" }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap hidden xl:table-cell">
+                            <div class="text-sm font-medium text-[hsl(var(--status-completed))]">
+                                ${{ sales_employee.sales_achieved|floatformat:0|default:"0" }}
+                            </div>
+                            {% if sales_employee.sales_target %}
+                            <div class="text-xs text-[hsl(var(--muted-foreground))]">
+                                {% widthratio sales_employee.sales_achieved sales_employee.sales_target 100 %}% of
+                                target
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                            {% if sales_employee.profile_picture %}
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[hsl(var(--status-completed))] text-white">
+                                <i class="ri-check-line mr-1"></i>Available
+                            </span>
+                            {% else %}
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))]">
+                                <i class="ri-close-line mr-1"></i>No Image
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                {% if perms.uniworlderp.view_salesemployee %}
+                                <a href="{% url 'customer_vendor:sales_employee_view' sales_employee.pk %}"
+                                    class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-md bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:opacity-90 transition-all shadow-sm"
+                                    title="View Details">
+                                    <i class="ri-eye-line"></i>
+                                </a>
+                                {% endif %}
+                                {% if perms.uniworlderp.change_salesemployee %}
+                                <a href="{% url 'customer_vendor:sales_employee_edit' sales_employee.pk %}"
+                                    class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-md bg-[hsl(var(--status-completed))] text-white hover:opacity-90 transition-all shadow-sm"
+                                    title="Edit">
+                                    <i class="ri-edit-line"></i>
+                                </a>
+                                {% endif %}
+                                {% if perms.uniworlderp.delete_salesemployee %}
+                                <a href="{% url 'customer_vendor:sales_employee_delete' sales_employee.pk %}"
+                                    class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-md bg-[hsl(var(--destructive))] text-[hsl(var(--destructive-foreground))] hover:opacity-90 transition-all shadow-sm"
+                                    title="Delete"
+                                    onclick="return confirm('Are you sure you want to delete this employee?');">
+                                    <i class="ri-delete-bin-line"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="px-6 py-12 text-center">
+                            <div class="flex flex-col items-center justify-center">
+                                <i class="ri-user-follow-line text-6xl text-[hsl(var(--muted-foreground))] mb-4"></i>
+                                <h3 class="text-lg font-medium text-[hsl(var(--foreground))] mb-2">No sales employees
+                                    found</h3>
+                                <p class="text-sm text-[hsl(var(--muted-foreground))] mb-4">Get started by adding your
+                                    first sales employee.</p>
+                                <a href="{% url 'customer_vendor:sales_employee_create' %}"
+                                    class="inline-flex items-center px-4 py-2 bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] rounded-lg hover:opacity-90 font-medium shadow-sm">
+                                    <i class="ri-add-line mr-2"></i>Add Sales Employee
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Footer -->
+        {% if sales_employees %}
+        <div class="bg-primary-gradient border-t border-[hsl(var(--border))] px-6 py-4">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <!-- Results Info -->
+                <div class="text-sm text-white/80">
+                    Showing
+                    <span class="font-medium text-white">{{ page_obj.start_index }}</span>
+                    to
+                    <span class="font-medium text-white">{{ page_obj.end_index }}</span>
+                    of
+                    <span class="font-medium text-white">{{ paginator.count }}</span>
+                    results
+                </div>
+
+                <!-- Pagination Controls -->
+                <nav class="flex items-center gap-2" aria-label="Pagination">
+                    {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}"
+                        class="inline-flex items-center px-3 py-2 border border-white/20 rounded-lg text-sm font-medium text-white bg-white/10 hover:bg-white/20 transition-all">
+                        <i class="ri-arrow-left-s-line mr-1"></i>
+                        Previous
+                    </a>
+                    {% else %}
+                    <span
+                        class="inline-flex items-center px-3 py-2 border border-white/10 rounded-lg text-sm font-medium text-white/40 bg-white/5 cursor-not-allowed opacity-50">
+                        <i class="ri-arrow-left-s-line mr-1"></i>
+                        Previous
+                    </span>
+                    {% endif %}
+
+                    <!-- Page Numbers -->
+                    <div class="hidden sm:flex items-center gap-1">
+                        {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                        <span
+                            class="inline-flex items-center justify-center w-10 h-10 rounded-lg text-sm font-semibold bg-white text-[hsl(var(--primary))] shadow-sm">
+                            {{ num }}
+                        </span>
+                        {% else %}
+                        <a href="?page={{ num }}"
+                            class="inline-flex items-center justify-center w-10 h-10 rounded-lg text-sm font-medium text-white bg-white/10 hover:bg-white/20 border border-white/20 transition-all">
+                            {{ num }}
+                        </a>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}"
+                        class="inline-flex items-center px-3 py-2 border border-white/20 rounded-lg text-sm font-medium text-white bg-white/10 hover:bg-white/20 transition-all">
+                        Next
+                        <i class="ri-arrow-right-s-line ml-1"></i>
+                    </a>
+                    {% else %}
+                    <span
+                        class="inline-flex items-center px-3 py-2 border border-white/10 rounded-lg text-sm font-medium text-white/40 bg-white/5 cursor-not-allowed opacity-50">
+                        Next
+                        <i class="ri-arrow-right-s-line ml-1"></i>
+                    </span>
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Table sorting functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.getElementById('salesEmployeeTable');
+        if (!table) return;
+
+        const headers = table.querySelectorAll('th');
+        const tableBody = table.querySelector('tbody');
+        const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+        const directions = Array.from(headers).map(() => '');
+
+        const sortColumn = (index) => {
+            const direction = directions[index] || 'asc';
+            const multiplier = (direction === 'asc') ? 1 : -1;
+            const newRows = Array.from(rows);
+
+            newRows.sort((rowA, rowB) => {
+                const cellA = rowA.querySelectorAll('td')[index]?.textContent.trim() || '';
+                const cellB = rowB.querySelectorAll('td')[index]?.textContent.trim() || '';
+
+                return cellA.localeCompare(cellB) * multiplier;
+            });
+
+            rows.forEach(row => tableBody.removeChild(row));
+            newRows.forEach(row => tableBody.appendChild(row));
+
+            directions[index] = direction === 'asc' ? 'desc' : 'asc';
+        };
+
+        headers.forEach((header, index) => {
+            if (index > 0 && index < headers.length - 1) {
+                header.addEventListener('click', () => sortColumn(index));
+            }
+        });
+    });
+</script>
+{% endblock %}
